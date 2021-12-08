@@ -12,7 +12,16 @@ class Post extends Model
 
     const BORRADO = 1;
     const PUBLICADO = 2;
-    
+    protected $fillabel = [
+        'name',
+        'slug',
+        'extract',
+        'body',
+        'status',
+        'category_id',
+        'user_id',
+    ];
+
 
     public function user()
     {
@@ -34,7 +43,5 @@ class Post extends Model
     public function iamges()
     {
         return $this->morphMany(Image::class, 'imageable');
-    }   
-
-
+    }
 }
