@@ -15,9 +15,15 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
 
-        return response()->json(['ok' => true , 'data' => $categories]);
+
+        $categories = Category::included()
+            ->filter()
+            ->sort()
+            ->getOrPaginate();
+            // ->get();
+
+        return response()->json(['ok' => true, 'data' => $categories]);
     }
 
     /**
@@ -42,12 +48,17 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      *
+     *  with sirve para cargar relaciones
+     * 
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function show(Category $category)
+    public function show($id)
     {
-        return $category;
+
+        $categorie  = Category::included()->findOrFail($id);
+
+        return $categorie;
     }
 
     /**
@@ -61,7 +72,7 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|max:255',
-            'slug' => 'required|max:255|unique:categories,slug,'. $category->id
+            'slug' => 'required|max:255|unique:categories,slug,' . $category->id
         ]);
 
         $category->update($request->all());
